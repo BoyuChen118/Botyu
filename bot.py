@@ -1,7 +1,7 @@
 import discord
 import os
 from discord.ext import commands
-
+from confidentials import config
 
 client = commands.Bot(command_prefix = 'boi ',help_command=None)
 
@@ -22,5 +22,4 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension('cogs.{0}'.format(filename[:-3]))
     
-
-client.run("Nzc1OTYzNzY1NjI3Mjg5NjMw.X6t-kg._HTPUiRyJ4pXXBy9_h0HUFy_H0M")
+client.run(config.token)

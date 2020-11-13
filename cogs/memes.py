@@ -64,7 +64,9 @@ class memes(commands.Cog):
             for i in range(len(memetemplates)):
                 if len(memetemplates[i]) != 0:
                     p = "```{0}```".format(memetemplates[i])
-                    await ctx.send(p,delete_after = 20)
+                    await ctx.send(p,delete_after = 40)
+                    await ctx.author.send(p)
+
         elif len(args) == 1:
             memeid = memedic[int(args[0])][0]
             post2["template_id"] = memeid
