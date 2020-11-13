@@ -29,8 +29,10 @@ class memes(commands.Cog):
             "template_id": "112126428",
             "username": "boyuchen",
             "password": "kfq9aWrP#KFtviR",
-            "text0": "text0",
-            "text1": "text1",
+            "boxes[0][type]":"text",
+            "boxes[1][type]":"text",
+            "boxes[0][text]":"text1",
+            "boxes[1][text]":"text1",
         }
 
         box = {
@@ -72,31 +74,24 @@ class memes(commands.Cog):
             post2["template_id"] = memeid
 
 
-        # boxes doesn't work :(
-        #     text = ""
-        #     for i in range(memedic[int(args[0])][1]):
-        #         text += (" "+str(i))
-        #         abox = {
-        # "text": str(i),
-        # "x": 10,
-        # "y": 10,
-        # "width": 548,
-        # "height": 100,
-        # "color": "#ffffff",
-        # "outline_color": "#000000"
-        # }
-        #         post["boxes"].append(abox)
-            
+            text = ""
+            for i in range(memedic[int(args[0])][1]):
+                text += (" text"+str(i))
+                post2[f"boxes[{i}][text]"] = f"text{i}"
+                post2[f"boxes[{i}][type]"] = "text"
+               
+
             postresponse = requests.request('POST', url='https://api.imgflip.com/caption_image',params=post2).json()
             image = postresponse["data"]["url"].replace("\\","")
-            await ctx.send("boi meme {0}{1}".format(args[0]," \"text0\" \"text1\" "))
+            await ctx.send("boi meme {0}{1}".format(args[0],text))
             await ctx.send(image)
 
-        elif len(args) == 3:
+        elif len(args) >= 3 and len(args) < 10:
             memeid = memedic[int(args[0])][0]
             post2["template_id"] = memeid
-            post2["text0"] = args[1]    
-            post2["text1"] = args[2]
+            for i in range(memedic[int(args[0])][1]):
+                post2[f"boxes[{i}][text]"] = args[i+1]
+                post2[f"boxes[{i}][type]"] = "text"
             postresponse = requests.request('POST', url='https://api.imgflip.com/caption_image',params=post2).json()
             image = postresponse["data"]["url"].replace("\\","")
             await ctx.send(image)
