@@ -17,32 +17,10 @@ class memes(commands.Cog):
         memetemplates = ["","","","","",""]
         memedic = {}  #{num: (id,boxcount)}
 
-
-        # post = {
-        #     "template_id": "",
-        #     "username": "boyuchen",
-        #     "password": "kfq9aWrP#KFtviR",
-        #     "boxes":[],
-        # }
-
         post2 = {
             "template_id": "112126428",
             "username": "boyuchen",
             "password": "kfq9aWrP#KFtviR",
-            "boxes[0][type]":"text",
-            "boxes[1][type]":"text",
-            "boxes[0][text]":"text1",
-            "boxes[1][text]":"text1",
-        }
-
-        box = {
-        "text": "",
-        "x": 10,
-        "y": 10,
-        "width": 548,
-        "height": 100,
-        "color": "#ffffff",
-        "outline_color": "#000000"
         }
 
         if response.status_code == 200: # ok
@@ -50,13 +28,15 @@ class memes(commands.Cog):
             count = 0
             pointer = 0
             for num,temp in enumerate(res["data"]["memes"]):
+                if count >= len(res["data"]["memes"])//5:
+                    pointer += 1
+                    count = 0
                 if count < len(res["data"]["memes"])//5:
                     memetemplates[pointer] = memetemplates[pointer] + str(num)+":  "+temp["name"]+"\n"
                     memedic[num] = (temp["id"],temp["box_count"])
                     count += 1
                 else:
-                    pointer += 1
-                    count = 0
+                    print("error in memes")
                         
         else:
             print("network issue")
@@ -90,7 +70,7 @@ class memes(commands.Cog):
             memeid = memedic[int(args[0])][0]
             post2["template_id"] = memeid
             for i in range(memedic[int(args[0])][1]):
-                post2[f"boxes[{i}][text]"] = args[i+1]
+                post2[f"boxes[{i}][text]"] = str(args[i+1]).upper()
                 post2[f"boxes[{i}][type]"] = "text"
             postresponse = requests.request('POST', url='https://api.imgflip.com/caption_image',params=post2).json()
             image = postresponse["data"]["url"].replace("\\","")
