@@ -2,6 +2,9 @@ import discord
 import os
 from discord.ext import commands
 from confidentials import config
+from boto.s3.connection import S3Connection
+
+TOKEN = S3Connection(os.environ['TOKEN'])
 
 client = commands.Bot(command_prefix = 'boi ',help_command=None)
 
@@ -22,4 +25,4 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension('cogs.{0}'.format(filename[:-3]))
     
-client.run(config.token)
+client.run(TOKEN)
