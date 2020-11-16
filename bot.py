@@ -19,6 +19,14 @@ async def unload(ctx,extension):
 async def reload(ctx,extension):
     await ctx.invoke(client.get_command('unload'),extension)
     await ctx.invoke(client.get_command('load'),extension)
+
+@client.command()
+async def die(ctx):
+    if ctx.author.id == 455948790239723530:
+        await ctx.send("<:skull:777710892736970802> \*menacing death noises\* <:skull:777710892736970802>")
+        await client.close()
+    else:
+        await ctx.send("I can never be killed")
 # Load initial cogs
 for filename in os.listdir('./cogs'):       
     if filename.endswith('.py'):

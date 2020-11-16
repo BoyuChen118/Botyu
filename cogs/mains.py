@@ -10,6 +10,7 @@ class mains(commands.Cog):
         self.games = ["You","Porn"," ","Your mom","you sleep","Valortne"]
         self.checks1 = ["it's all", "its always","always has","has been","it's always","its all","its there","it's there","it's been there","its been there","it been there","its been","it's been", "Wait it's","wait it's", "was it like","have you been","has it been","have it been"]
         self.checks2 = []
+        self.me = 455948790239723530
     # below are events
     @commands.Cog.listener()
     async def on_ready(self):
@@ -45,8 +46,7 @@ class mains(commands.Cog):
 
     @commands.command()
     async def helloworld(self,ctx):
-        me = 455948790239723530
-        if ctx.author.id == me:
+        if ctx.author.id == self.me:
             await ctx.send("Hello World!")
         else:
             await ctx.send("huh?")
@@ -85,7 +85,7 @@ class mains(commands.Cog):
         else:
             for i in range(int(args[0])):
                 await ctx.send('https://tenor.com/view/jojo-jotaro-darby-play-valorant-gif-17386898')
-
+   
 def setup(bot):
     bot.add_cog(mains(bot))
 
