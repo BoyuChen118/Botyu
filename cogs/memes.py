@@ -14,9 +14,15 @@ class memes(commands.Cog):
     async def meme(self,ctx,*args):
         
         response = requests.get("https://api.imgflip.com/get_memes")
-        memetemplates = ["","","","","",""]
+        custometemplates = [
+            {
+                "id": 280484604,
+                "name": "Moment before disaster (valorant)",
+                "box_count": 2,
+            }
+        ]
+        memetemplates = ["","","","","","",""]
         memedic = {}  #{num: (id,boxcount)}
-
         post2 = {
             "template_id": "112126428",
             "username": "boyuchen",
@@ -27,7 +33,19 @@ class memes(commands.Cog):
             res = response.json()
             count = 0
             pointer = 0
-            for num,temp in enumerate(res["data"]["memes"]):
+            for num,temp in enumerate(custometemplates):  # iterate through custom templates
+                if count >= len(custometemplates):
+                    pointer += 1
+                    count = 0
+                elif count < len(custometemplates):
+                    num = num + 100
+                    memetemplates[pointer] = memetemplates[pointer] + str(num)+":  "+temp["name"]+"\n"
+                    memedic[num] = (temp["id"],temp["box_count"])
+                    count += 1
+                else:
+                    print("error in custom memes")
+            pointer += 1
+            for num,temp in enumerate(res["data"]["memes"]):  # iterate through premade templates
                 if count >= len(res["data"]["memes"])//5:
                     pointer += 1
                     count = 0
@@ -46,7 +64,7 @@ class memes(commands.Cog):
             for i in range(len(memetemplates)):
                 if len(memetemplates[i]) != 0:
                     p = "```{0}```".format(memetemplates[i])
-                    await ctx.send(p,delete_after = 40)
+                    await ctx.send(p,delete_after = 30)
                     await ctx.author.send(p)
 
         elif len(args) == 1:
