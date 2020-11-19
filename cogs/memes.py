@@ -19,9 +19,14 @@ class memes(commands.Cog):
                 "id": 280484604,
                 "name": "Moment before disaster (valorant)",
                 "box_count": 2,
+            },
+            {
+                "id":280489819,
+                "name": "Police cars crash",
+                "box_count": 2,   
             }
         ]
-        memetemplates = ["","","","","","",""]
+        memetemplates = ["","","","","","","",""]
         memedic = {}  #{num: (id,boxcount)}
         post2 = {
             "template_id": "112126428",
