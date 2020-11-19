@@ -103,8 +103,14 @@ class memes(commands.Cog):
                     await ctx.send("Too many argument, but still works")
                 post2["template_id"] = memeid
                 for i in range(memedic[int(args[0])][1]):
-                    post2[f"boxes[{i}][text]"] = str(args[i+1]).upper()
+                    argument = ""
+                    if len(str(args[i+1])) == 0:
+                        argument = " "
+                    else:
+                        argument = str(args[i+1])
+                    post2[f"boxes[{i}][text]"] = argument.upper()
                     post2[f"boxes[{i}][type]"] = "text"
+
                 postresponse = requests.request('POST', url='https://api.imgflip.com/caption_image',params=post2).json()
                 if not postresponse["success"]:
                     await ctx.send("You just got memed on son")
