@@ -24,8 +24,13 @@ class memes(commands.Cog):
                 "id":280489819,
                 "name": "Police cars crash",
                 "box_count": 2,   
+            },
+            {
+                "id":129291,
+                "name":"bruh",
+                "box_count": 2,
             }
-        ]
+        ]               # all custom templates are stored here
         memetemplates = ["","","","","","","",""]
         memedic = {}  #{num: (id,boxcount)}
         post2 = {
