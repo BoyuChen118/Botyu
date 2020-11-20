@@ -12,7 +12,7 @@ class memes(commands.Cog):
 
     @commands.command()
     async def meme(self,ctx,*args):
-        
+        possiblecommands = ["submit", "delete"]
         response = requests.get("https://api.imgflip.com/get_memes")
         custometemplates = [
             {
@@ -25,12 +25,8 @@ class memes(commands.Cog):
                 "name": "Police cars crash",
                 "box_count": 2,   
             },
-            {
-                "id":129291,
-                "name":"bruh",
-                "box_count": 2,
-            }
         ]               # all custom templates are stored here
+
         memetemplates = ["","","","","","","",""]
         memedic = {}  #{num: (id,boxcount)}
         post2 = {
@@ -43,17 +39,38 @@ class memes(commands.Cog):
             res = response.json()
             count = 0
             pointer = 0
-            for num,temp in enumerate(custometemplates):  # iterate through custom templates
-                if count >= len(custometemplates):
-                    pointer += 1
-                    count = 0
-                elif count < len(custometemplates):
-                    num = num + 100
-                    memetemplates[pointer] = memetemplates[pointer] + str(num)+":  "+temp["name"]+"\n"
-                    memedic[num] = (temp["id"],temp["box_count"])
-                    count += 1
-                else:
-                    print("error in custom memes")
+            # for num,temp in enumerate(custometemplates):  # iterate through custom templates
+            #     if count >= len(custometemplates):
+            #         pointer += 1
+            #         count = 0
+            #     elif count < len(custometemplates):
+            #         num = num + 100
+            #         memetemplates[pointer] = memetemplates[pointer] + str(num)+":  "+temp["name"]+"\n"
+            #         memedic[num] = (temp["id"],temp["box_count"])
+            #         count += 1
+            #     else:
+            #         print("error in custom memes")
+            with open('memes/custommemes.txt','r') as f:
+                lines = f.readlines()
+                for num,line in enumerate(lines):  # iterate through custom templates
+                    try:
+                        if count >= 20:
+                            pointer += 1
+                            count = 0
+                        elif count < len(lines):
+                            num = num + 100
+                            firstcomma = line.index(",")
+                            secondcomma = line.index(",",firstcomma+1,len(line))
+                            name = line[0:firstcomma]
+                                    # break down each entry
+                            memetemplates[pointer] = memetemplates[pointer] + str(num)+":  "+name+"\n"
+                            memedic[num] = (int(line[firstcomma+1:secondcomma]),int(line[secondcomma+1:]))
+                            count += 1
+                    except:
+                        continue
+                    else:
+                        print("error in custom memes")
+
             pointer += 1
             for num,temp in enumerate(res["data"]["memes"]):  # iterate through premade templates
                 if count >= len(res["data"]["memes"])//5:
@@ -79,7 +96,16 @@ class memes(commands.Cog):
 
         elif len(args) == 1:
             if not args[0].isdigit():
-                await ctx.send("ur kinda a 米姆")
+                if str(args[0]) in possiblecommands:  # unknown commands
+                    if possiblecommands.index(str(args[0])):
+                        await ctx.send("format: boi meme delete name")
+                    else:
+                        await ctx.send("format: boi meme submit \"name\" ID numberoftextboxes")
+                else:            
+                    await ctx.send("ur kinda a 米姆")
+                    return
+            elif int(args[0]) > 500:    # it's an id
+                await ctx.send("format for instant custom template: boi meme ID numberoftextboxes text1 text2 ....")
             else:
                 memeid = memedic[int(args[0])][0]
                 post2["template_id"] = memeid
@@ -95,9 +121,52 @@ class memes(commands.Cog):
                 await ctx.send("boi meme {0}{1}".format(args[0],text))
                 await ctx.send(image)
 
-        elif len(args) >= 3 and len(args) < 10:
-            if not args[0].isdigit():
+        elif len(args) >= 2 and len(args) < 20:
+            if not args[0].isdigit() and str(args[0]) not in possiblecommands:
                 await ctx.send("ur kinda a 米姆") 
+            elif str(args[0]).lower() == "submit":  # submit a custom meme template for later use  index 1: name, index 2: id ,index 3: boxcount
+                if len(args) == 4:
+                    with open('memes/custommemes.txt','a') as f:
+                        f.write("\"{0}\",{1},{2}\n".format(str(args[1]),str(args[2]),str(args[3])))
+                    with open('memes/backupmemes.txt','a') as f:
+                        f.write("\"{0}\",{1},{2}\n".format(str(args[1]),str(args[2]),str(args[3])))
+                    await ctx.send("submission successful")
+                    return
+                else:
+                    await ctx.send("format: boi meme submit \"name\" ID numberoftextboxes")
+                    return
+
+            elif str(args[0]).lower() == "delete": # delete a meme template index 1: name of template to be deleted
+
+                if len(args) == 2:
+                    with open("memes/custommemes.txt", "r") as f:
+                        lines = f.readlines()
+                    with open("memes/custommemes.txt", "w") as f:
+                        for line in lines:
+                            if str(args[1]).lower() not in line.lower():
+                                f.write(line)
+                    await ctx.send("delete successful")
+                    return
+                else:
+                    await ctx.send("format: boi meme delete name")
+                    return
+            elif int(args[0]) > 500:  # custom template  index 0: id, index 1:boxcount
+                post2["template_id"] = int(args[0])
+                firstargument = 2
+                boxcount = 0
+                if not args[1].isdigit():
+                    firstargument = 1
+                    boxcount = 2
+                else:
+                    boxcount = int(args[1])
+                for i in range(boxcount):
+                    argument = ""
+                    if len(str(args[i+firstargument])) == 0:
+                        argument = " "
+                    else:
+                        argument = str(args[i+firstargument])
+                    post2[f"boxes[{i}][text]"] = argument.upper()
+                    post2[f"boxes[{i}][type]"] = "text"
             else:
                 memeid = memedic[int(args[0])][0]
                 boxnum = len(args)-1
@@ -116,12 +185,12 @@ class memes(commands.Cog):
                     post2[f"boxes[{i}][text]"] = argument.upper()
                     post2[f"boxes[{i}][type]"] = "text"
 
-                postresponse = requests.request('POST', url='https://api.imgflip.com/caption_image',params=post2).json()
-                if not postresponse["success"]:
-                    await ctx.send("You just got memed on son")
-                    return
-                image = postresponse["data"]["url"].replace("\\","")
-                await ctx.send(image)
+            postresponse = requests.request('POST', url='https://api.imgflip.com/caption_image',params=post2).json()
+            if not postresponse["success"]:
+                await ctx.send("You just got memed on son")
+                return
+            image = postresponse["data"]["url"].replace("\\","")
+            await ctx.send(image)
             
         else:
             await ctx.send("ur kinda a 米姆")
