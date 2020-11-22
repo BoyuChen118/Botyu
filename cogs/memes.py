@@ -52,8 +52,6 @@ class memes(commands.Cog):
                             count += 1
                     except:
                         continue
-                    else:
-                        print("error in custom memes")
 
             pointer += 1
             # iterate through premade templates
