@@ -1,6 +1,6 @@
 # Botyu
 
-## Main example commands:
+## Example main commands:
 ```
 boi roll 2 5
 boi valortne 3
@@ -11,7 +11,7 @@ boi help
 
 
 
-## Meme example commands:
+## Example meme commands:
 ```
 boi meme 
 boi meme 0
