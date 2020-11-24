@@ -20,3 +20,9 @@ custmeme = client.download_file('botyutoken','custommemes.txt','C:\\Users\\Alex 
 
 with open('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt', 'r') as f:       # write it in custom meme templates first
     print(f.readlines())
+
+FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+# absolute path to this file's root directory
+PARENT_DIR = os.path.join(FILE_DIR, os.pardir) 
+ROOT = os.path.join(PARENT_DIR, os.pardir) 
+print(PARENT_DIR)

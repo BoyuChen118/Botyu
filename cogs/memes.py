@@ -22,20 +22,19 @@ class memes(commands.Cog):
     @commands.command()
     async def meme(self, ctx, *args):
 
+        FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+        PARENT = os.path.join(FILE_DIR, os.pardir)   # this will be the root dir
+        memepath = os.path.join(PARENT,"memes")
+        custompath = os.path.join(memepath,"custommemes.txt")       # path for custom meme and backup meme
+        backuppath = os.path.join(memepath,"backupmemes.txt")
+
+
         possiblecommands = ["submit", "delete"]
         response = requests.get("https://api.imgflip.com/get_memes")
         memetemplates = ["", "", "", "", "", "", "", ""]
         memedic = {}  # {num: (id,boxcount)}
 
-        # test code
-        clientResponse = self.amazonclient.list_buckets()
 
-        # Print the bucket names one by one
-        print('Printing bucket names...')
-        for bucket in clientResponse['Buckets']:
-            await ctx.send(f'Bucket Name: {bucket["Name"]}')
-        
-        # test ^
 
         post2 = {
             "template_id": "112126428",
@@ -47,7 +46,8 @@ class memes(commands.Cog):
             res = response.json()
             count = 0
             pointer = 0
-            self.amazonclient.download_file('botyutoken','custommemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt')
+
+            self.amazonclient.download_file('botyutoken','custommemes.txt',custompath)
             with open('memes/custommemes.txt', 'r') as f:
                 lines = f.readlines()
                 # iterate through custom templates
@@ -128,16 +128,16 @@ class memes(commands.Cog):
             # submit a custom meme template for later use  index 1: name, index 2: id ,index 3: boxcount
             elif str(args[0]).lower() == "submit":
                 if len(args) == 4:
-                    self.amazonclient.download_file('botyutoken','custommemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt')
-                    self.amazonclient.download_file('botyutoken','backupmemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt')
+                    self.amazonclient.download_file('botyutoken','custommemes.txt',custompath)
+                    self.amazonclient.download_file('botyutoken','backupmemes.txt',backuppath)
                     with open('memes/custommemes.txt', 'a') as f:       # write it in custom meme templates first
                         f.write("\"{0}\",{1},{2}\n".format(
                             str(args[1]), str(args[2]), str(args[3])))
                     with open('memes/backupmemes.txt', 'a') as f:       # save of copy in backup
                         f.write("\"{0}\",{1},{2}\n".format(
                             str(args[1]), str(args[2]), str(args[3])))
-                    self.amazonclient.upload_file('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt','botyutoken','custommemes.txt')
-                    self.amazonclient.upload_file('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt','botyutoken','backupmemes.txt')
+                    self.amazonclient.upload_file(custompath,'botyutoken','custommemes.txt')
+                    self.amazonclient.upload_file(backuppath,'botyutoken','backupmemes.txt')
                     await ctx.send("submission successful")
                     return
                 else:
@@ -149,21 +149,30 @@ class memes(commands.Cog):
             elif str(args[0]).lower() == "delete":
 
                 if len(args) == 2:
-                    self.amazonclient.download_file('botyutoken','custommemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt')
-                    self.amazonclient.download_file('botyutoken','backupmemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt')
+                    self.amazonclient.download_file('botyutoken','custommemes.txt',custompath)
+                    self.amazonclient.download_file('botyutoken','backupmemes.txt',backuppath)
                     with open("memes/custommemes.txt", "r") as f:
                         lines = f.readlines()
                     with open("memes/custommemes.txt", "w") as f:
                         for line in lines:
                             if str(args[1]).lower() not in line.lower():
                                 f.write(line)
-                    self.amazonclient.upload_file('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt','botyutoken','custommemes.txt')
-                    self.amazonclient.upload_file('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt','botyutoken','backupmemes.txt')
+                    if ctx.author.id == 455948790239723530:     # I can delete memes in backupmemes as well
+                        with open("memes/backupmemes.txt", "r") as f:
+                            lines = f.readlines()
+                        with open("memes/backupmemes.txt", "w") as f:
+                            for line in lines:
+                                if str(args[1]).lower() not in line.lower():
+                                    f.write(line)
+                        self.amazonclient.upload_file(custompath,'botyutoken','custommemes.txt')
+                        self.amazonclient.upload_file(backuppath,'botyutoken','backupmemes.txt')
                     await ctx.send("delete successful")
                     return
                 else:
                     await ctx.send("format: boi meme delete name")
                     return
+
+            
             elif int(args[0]) > 500:  # custom template  index 0: id, index 1:boxcount
                 post2["template_id"] = int(args[0])
                 firstargument = 2
