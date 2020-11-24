@@ -16,7 +16,7 @@ for bucket in clientResponse['Buckets']:
 
 
 absolute_path = os.path.dirname(os.path.abspath(__file__))
-custmeme = client.download_file('botyutoken','custommemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt')
+custmeme = client.download_file('botyutoken','custommemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt')
 
-with open('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt', 'r') as f:       # write it in custom meme templates first
+with open('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt', 'r') as f:       # write it in custom meme templates first
     print(f.readlines())

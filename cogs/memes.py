@@ -26,7 +26,17 @@ class memes(commands.Cog):
         response = requests.get("https://api.imgflip.com/get_memes")
         memetemplates = ["", "", "", "", "", "", "", ""]
         memedic = {}  # {num: (id,boxcount)}
+
+        # test code
+        clientResponse = self.amazonclient.list_buckets()
+
+        # Print the bucket names one by one
+        print('Printing bucket names...')
+        for bucket in clientResponse['Buckets']:
+            await ctx.send(f'Bucket Name: {bucket["Name"]}')
         
+        # test ^
+
         post2 = {
             "template_id": "112126428",
             "username": "boyuchen",
