@@ -1,5 +1,6 @@
 import requests
 import json
+import boto3,os
 from discord.ext import commands, tasks
 
 
@@ -7,6 +8,12 @@ class memes(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.amazonclient = boto3.client(
+    's3',
+    aws_access_key_id = os.environ['S3_KEY'],
+    aws_secret_access_key = os.environ['S3_SECRET'],
+    region_name = 'us-west-1'
+)
     
     @commands.command()
     async def ok(self, ctx):
@@ -14,6 +21,7 @@ class memes(commands.Cog):
 
     @commands.command()
     async def meme(self, ctx, *args):
+
         possiblecommands = ["submit", "delete"]
         response = requests.get("https://api.imgflip.com/get_memes")
         memetemplates = ["", "", "", "", "", "", "", ""]
@@ -24,12 +32,12 @@ class memes(commands.Cog):
             "username": "boyuchen",
             "password": "kfq9aWrP#KFtviR",
         }
-
+        
         if response.status_code == 200:  # ok
             res = response.json()
             count = 0
             pointer = 0
-
+            self.amazonclient.download_file('botyutoken','custommemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt')
             with open('memes/custommemes.txt', 'r') as f:
                 lines = f.readlines()
                 # iterate through custom templates
@@ -110,28 +118,37 @@ class memes(commands.Cog):
             # submit a custom meme template for later use  index 1: name, index 2: id ,index 3: boxcount
             elif str(args[0]).lower() == "submit":
                 if len(args) == 4:
+                    self.amazonclient.download_file('botyutoken','custommemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt')
+                    self.amazonclient.download_file('botyutoken','backupmemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt')
                     with open('memes/custommemes.txt', 'a') as f:       # write it in custom meme templates first
                         f.write("\"{0}\",{1},{2}\n".format(
                             str(args[1]), str(args[2]), str(args[3])))
                     with open('memes/backupmemes.txt', 'a') as f:       # save of copy in backup
                         f.write("\"{0}\",{1},{2}\n".format(
                             str(args[1]), str(args[2]), str(args[3])))
+                    self.amazonclient.upload_file('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt','botyutoken','custommemes.txt')
+                    self.amazonclient.upload_file('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt','botyutoken','backupmemes.txt')
                     await ctx.send("submission successful")
                     return
                 else:
                     await ctx.send("format: boi meme submit \"name\" ID numberoftextboxes")
                     return
+              
 
             # delete a meme template index 1: name of template to be deleted
             elif str(args[0]).lower() == "delete":
 
                 if len(args) == 2:
+                    self.amazonclient.download_file('botyutoken','custommemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt')
+                    self.amazonclient.download_file('botyutoken','backupmemes.txt','C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt')
                     with open("memes/custommemes.txt", "r") as f:
                         lines = f.readlines()
                     with open("memes/custommemes.txt", "w") as f:
                         for line in lines:
                             if str(args[1]).lower() not in line.lower():
                                 f.write(line)
+                    self.amazonclient.upload_file('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\custommemes.txt','botyutoken','custommemes.txt')
+                    self.amazonclient.upload_file('C:\\Users\\Alex Chen\\Desktop\\DiscordBot\\memes\\backupmemes.txt','botyutoken','backupmemes.txt')
                     await ctx.send("delete successful")
                     return
                 else:

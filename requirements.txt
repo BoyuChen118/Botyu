@@ -4,6 +4,7 @@ astroid==2.4.2
 async-timeout==3.0.1
 attrs==20.3.0
 autopep8==1.5.4
+boto3==1.16.18
 certifi==2020.6.20
 chardet==3.0.4
 colorama==0.4.4
@@ -22,7 +23,6 @@ multidict==4.7.6
 numpy==1.19.2
 Pillow==7.2.0
 pycodestyle==2.6.0
-pygame==1.9.6
 pylint==2.6.0
 pyparsing==2.4.7
 python-dateutil==2.8.1
