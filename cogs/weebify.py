@@ -34,7 +34,8 @@ class weebify(commands.Cog):
                 errorcounter += 1
                 continue
             break
-        await ctx.send("😢")
+        if errorcounter > 100:
+            await ctx.send("😢")
 
     @commands.command()
     async def weebify(self,ctx, *args):
