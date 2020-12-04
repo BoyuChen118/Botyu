@@ -3,13 +3,15 @@ import time
 import googletrans
 from googletrans import Translator
 from googletrans.gtoken import TokenAcquirer
-
+import random
 
 class weebify(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
 
+    def trans(self,string):
+        pass
     @commands.command()
     async def translate(self, ctx, *args):
         errorcounter = 0
@@ -38,8 +40,25 @@ class weebify(commands.Cog):
             await ctx.send("😢")
 
     @commands.command()
-    async def weebify(self,ctx, *args):
-        pass
+    async def weebify(self,ctx, *args):  # romanizes random words
+        words = [arg for arg in args]
+        percentage = 0
+        if words[0].isdigit():
+            percentage = int(words[0])
+        else:
+            percentage = 20
+            if len(words) < 5:
+                percentage = 40
+        numrand = round(len(words) * (percentage/100))
+        randlist = []
+        while len(randlist) < numrand:
+            rand = random.randint(0,len(words)-1)
+            if rand not in randlist:
+                randlist.append(rand)
+        for r in randlist:
+            words[r] = "bruh"
+        await ctx.send(" ".join(words))
+
 
 def setup(bot):
     bot.add_cog(weebify(bot))

@@ -39,25 +39,26 @@ from googletrans import Translator
 from googletrans.gtoken import TokenAcquirer
 import time
 
-while True:
-    try:
-        acquirer = TokenAcquirer()
-        text = 'test'
-        tk = acquirer.do(text)
-        print(tk)
-    except:
-        print("bruh")
-        continue
-    break
+# while True:
+#     try:
+#         acquirer = TokenAcquirer()
+#         text = 'test'
+#         tk = acquirer.do(text)
+#         print(tk)
+#     except:
+#         print("bruh1")
+#         continue
+#     break
 
 
-translator = Translator()
+translator = Translator(service_urls=['translate.googleapis.com'])
 texts = ["bruh","this","translator","sucks"]
 tex = " ".join(texts)   
-try:
-    detected = translator.detect("bruh").lang
-except:
-    print("error in detect")
+detected = "en"
+# try:
+#     detected = translator.detect("bruh").lang
+# except:
+#     print("error in detect")
 
 if detected == "en":
     time.sleep(1)           # suppress timeout errors
