@@ -4,6 +4,7 @@ import googletrans
 from googletrans import Translator
 from googletrans.gtoken import TokenAcquirer
 import random
+import pykakasi
 
 class weebify(commands.Cog):
 
@@ -42,11 +43,14 @@ class weebify(commands.Cog):
     @commands.command()
     async def weebify(self,ctx, *args):  # romanizes random words
         words = [arg for arg in args]
-        percentage = 0
+        kks = pykakasi.kakasi()
+        translator = Translator(service_urls=['translate.googleapis.com'])
+
+        percentage = 0                      # pick which words to be weebified (dependent on percentage, default to 20%)
         if words[0].isdigit():
             percentage = int(words[0])
         else:
-            percentage = 20
+            percentage = 30
             if len(words) < 5:
                 percentage = 40
         numrand = round(len(words) * (percentage/100))
@@ -55,8 +59,11 @@ class weebify(commands.Cog):
             rand = random.randint(0,len(words)-1)
             if rand not in randlist:
                 randlist.append(rand)
-        for r in randlist:
-            words[r] = "bruh"
+
+        for r in randlist:                  # weebify them
+            trans = translator.translate(text=words[r],src="en",dest="ja")
+            t = kks.convert(trans.text)
+            words[r] = t[0]['hepburn']
         await ctx.send(" ".join(words))
 
 

@@ -38,7 +38,7 @@
 from googletrans import Translator
 from googletrans.gtoken import TokenAcquirer
 import time
-
+import pykakasi
 # while True:
 #     try:
 #         acquirer = TokenAcquirer()
@@ -59,14 +59,17 @@ detected = "en"
 #     detected = translator.detect("bruh").lang
 # except:
 #     print("error in detect")
-
+kks = pykakasi.kakasi()
 if detected == "en":
     time.sleep(1)           # suppress timeout errors
     try:
         trans = translator.translate(text=tex,src="en",dest="ja")
+        t = kks.convert(trans.text)
         print(trans.text)
+        for item in t:
+            print(item['hepburn'])
     except:
         print("bruh2")
-   
+
 
 ### WEEBIFY TEST ENDS
