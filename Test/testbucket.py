@@ -35,41 +35,53 @@
 
 ### WEEBIFY TEST BEGINS
 
-from googletrans import Translator
-from googletrans.gtoken import TokenAcquirer
-import time
-import pykakasi
-# while True:
+# from googletrans import Translator
+# from googletrans.gtoken import TokenAcquirer
+# import time
+# import pykakasi
+
+
+# translator = Translator(service_urls=['translate.googleapis.com'])
+# texts = ["bruh","this","translator","sucks"]
+# tex = " ".join(texts)   
+# detected = "en"
+
+# kks = pykakasi.kakasi()
+# if detected == "en":
+#     time.sleep(1)           # suppress timeout errors
 #     try:
-#         acquirer = TokenAcquirer()
-#         text = 'test'
-#         tk = acquirer.do(text)
-#         print(tk)
+#         trans = translator.translate(text=tex,src="en",dest="ja")
+#         t = kks.convert(trans.text)
+#         print(trans.text)
+#         for item in t:
+#             print(item['hepburn'])
 #     except:
-#         print("bruh1")
-#         continue
-#     break
-
-
-translator = Translator(service_urls=['translate.googleapis.com'])
-texts = ["bruh","this","translator","sucks"]
-tex = " ".join(texts)   
-detected = "en"
-# try:
-#     detected = translator.detect("bruh").lang
-# except:
-#     print("error in detect")
-kks = pykakasi.kakasi()
-if detected == "en":
-    time.sleep(1)           # suppress timeout errors
-    try:
-        trans = translator.translate(text=tex,src="en",dest="ja")
-        t = kks.convert(trans.text)
-        print(trans.text)
-        for item in t:
-            print(item['hepburn'])
-    except:
-        print("bruh2")
+#         print("bruh2")
 
 
 ### WEEBIFY TEST ENDS
+
+### IBM TRANSLATE TEST BEGINS
+import time,pykakasi,json,os
+from ibm_watson import LanguageTranslatorV3
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+apikey = os.environ["IBMTOKEN"]
+version = "2018-05-01"
+authenticator = IAMAuthenticator(f"{apikey}")
+language_translator = LanguageTranslatorV3(
+    version=f'{version}',
+    authenticator=authenticator
+)
+
+language_translator.set_service_url('https://api.us-south.language-translator.watson.cloud.ibm.com')
+languages = language_translator.list_languages().get_result()
+#print(json.dumps(languages, indent=2))
+
+
+translation = language_translator.translate(
+    text='yes master',
+    model_id='en-ja').get_result()
+t = translation["translations"][0]["translation"]
+print(json.dumps(translation, indent=2))
+
+### IBM TRANSLATE TEST ENDS
