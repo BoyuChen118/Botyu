@@ -13,6 +13,7 @@ class weebify(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        nltk.download("popular")
 
     def trans(self, string):
         pass
