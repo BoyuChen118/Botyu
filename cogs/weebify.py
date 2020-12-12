@@ -13,7 +13,6 @@ class weebify(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        nltk.download("popular")
 
     def trans(self, string):
         pass
@@ -81,7 +80,7 @@ class weebify(commands.Cog):
             percentage = 20
             if len(words) < 5:
                 percentage = 40
-        
+        nltk.download('universal_tagset')
         tokens = nltk.pos_tag(words,tagset="universal")
         randlist = []   # index of all to-be-weebified words
         forbitlist = ["him","her","yours","mine","with","why","who","what","when"]
