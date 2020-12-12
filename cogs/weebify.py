@@ -4,7 +4,7 @@ import os
 import googletrans
 from googletrans import Translator
 import random
-import pykakasi
+import pykakasi,nltk
 from ibm_watson import LanguageTranslatorV3
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
@@ -80,12 +80,20 @@ class weebify(commands.Cog):
             percentage = 20
             if len(words) < 5:
                 percentage = 40
-        numrand = round(len(words) * (percentage/100))
-        randlist = []
-        while len(randlist) < numrand:
-            rand = random.randint(0, len(words)-1)
-            if rand not in randlist:
-                randlist.append(rand)
+        
+        tokens = nltk.pos_tag(words,tagset="universal")
+        randlist = []   # index of all to-be-weebified words
+        forbitlist = ["him","her","yours","mine","with","why","who","what","when"]
+        for index,token in enumerate(tokens):
+            if token[1] == "PRON" or token[1] == "ADJ" or "yes" in token[0].lower():
+                if token[0].lower() not in forbitlist:
+                    randlist.append(index)
+        numdeleted = round(len(randlist) * (percentage/100))
+        
+            # rand = random.randint(0, len(words)-1)
+            # if rand not in randlist:
+            #     randlist.append(rand)
+            
 
         for r in randlist:                  # weebify them
             translation = language_translator.translate(
@@ -97,6 +105,8 @@ class weebify(commands.Cog):
                 transtext = translator.translate(text=words[r],src="en",dest="ja").text
             t = kks.convert(transtext)
             words[r] = t[0]['hepburn']
+            if words[r] == "I":
+                words[r] = "watashi"  # had to hardcode this one smh
         await ctx.send(" ".join(words))
 
 
