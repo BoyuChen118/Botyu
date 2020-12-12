@@ -75,7 +75,7 @@ class weebify(commands.Cog):
         percentage = 0
         if words[0].isdigit():
             percentage = int(words[0])
-            words[0] = ""
+            words[0] = " "
         else:
             percentage = 20
             if len(words) < 5:
