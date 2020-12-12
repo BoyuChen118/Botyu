@@ -81,6 +81,7 @@ class weebify(commands.Cog):
             if len(words) < 5:
                 percentage = 40
         nltk.download('universal_tagset')
+        nltk.download('averaged_perceptron_tagger')
         tokens = nltk.pos_tag(words,tagset="universal")
         randlist = []   # index of all to-be-weebified words
         forbitlist = ["him","her","yours","mine","with","why","who","what","when"]
