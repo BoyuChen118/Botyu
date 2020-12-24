@@ -13,6 +13,7 @@ class weebify(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.installation = False
 
     def trans(self, string):
         pass
@@ -47,6 +48,11 @@ class weebify(commands.Cog):
     @commands.command()
     async def weebify(self, ctx, *args):  # romanizes random words
 
+        if self.installation == False:
+            nltk.download('universal_tagset')
+            nltk.download('averaged_perceptron_tagger')
+            self.installation = True
+
         words = [arg for arg in args]       # set up translation tools and make sure user input isn't too long
 
         charcount = 0
@@ -80,8 +86,7 @@ class weebify(commands.Cog):
             percentage = 20
             if len(words) < 5:
                 percentage = 40
-        nltk.download('universal_tagset')
-        nltk.download('averaged_perceptron_tagger')
+       
         tokens = nltk.pos_tag(words,tagset="universal")
         randlist = []   # index of all to-be-weebified words
         forbitlist = ["him","her","yours","mine","with","why","who","what","when"]
@@ -89,7 +94,7 @@ class weebify(commands.Cog):
             if token[1] == "PRON" or token[1] == "ADJ" or "yes" in token[0].lower():
                 if token[0].lower() not in forbitlist:
                     randlist.append(index)
-        numdeleted = round(len(randlist) * (percentage/100))
+        randnum = round(len(randlist) * (percentage/100))
         
             # rand = random.randint(0, len(words)-1)
             # if rand not in randlist:
