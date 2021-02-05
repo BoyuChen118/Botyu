@@ -43,10 +43,17 @@ class weebify(commands.Cog):
                 if detected == "en":
                     trans = translator.translate(text=tex, src="en", dest="ja")
                     await ctx.send(trans.text)
+                    break
                 else:
                     trans = translator.translate(
                         text=tex, src=detected, dest="en")
-                    await ctx.send(trans.text)
+                    detected = translator.detect(trans.text).lang
+                    if detected == "en":                # check again for translation accuracy 
+                        await ctx.send(trans.text)
+                        break
+                    else:
+                        await ctx.send("Are you sure that's a human language?")
+                        break
 
             except:
                 print(Exception.args)
