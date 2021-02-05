@@ -35,59 +35,62 @@
 
 ### WEEBIFY TEST WITH GOOGLE TRANS BEGINS
 
-from googletrans import Translator
-from googletrans.gtoken import TokenAcquirer
-import time
-import pykakasi
+# from googletrans import Translator
+# from googletrans.gtoken import TokenAcquirer
+# import time
+# import pykakasi
 
 
-translator = Translator(service_urls=['translate.googleapis.com'])
-texts = ["I","this","translator","sucks"]
-tex = " ".join(texts)   
-detected = "en"
+# translator = Translator(service_urls=['translate.googleapis.com'])
+# texts = ["I","this","translator","sucks"]
+# tex = " ".join(texts)   
+# detected = "en"
 
-kks = pykakasi.kakasi()
-if detected == "en":
-    time.sleep(1)           # suppress timeout errors
-    try:
-        trans = translator.translate(text=tex,src="en",dest="ja")
-        t = kks.convert(trans.text)
-        print(trans.text)
-        for item in t:
-            print(item['hepburn'])
-    except:
-        print("bruh2")
+# kks = pykakasi.kakasi()
+# if detected == "en":
+#     time.sleep(1)           # suppress timeout errors
+#     try:
+#         trans = translator.translate(text=tex,src="en",dest="ja")
+#         t = kks.convert(trans.text)
+#         print(trans.text)
+#         for item in t:
+#             print(item['hepburn'])
+#     except:
+#         print("bruh2")
 
 
 ### WEEBIFY TEST ENDS
 
-### IBM TRANSLATE TEST BEGINS
-# import time,pykakasi,json,os
-# from ibm_watson import LanguageTranslatorV3
-# from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-# import pykakasi
-# apikey = os.environ["IBMTOKEN"]
-# version = "2018-05-01"
-# authenticator = IAMAuthenticator(f"{apikey}")
-# language_translator = LanguageTranslatorV3(
-#     version=f'{version}',
-#     authenticator=authenticator
-# )
+## IBM TRANSLATE TEST BEGINS
+import time,pykakasi,json,os
+from ibm_watson import LanguageTranslatorV3
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+import pykakasi
+apikey = os.environ["IBMTOKEN"]
+version = "2018-05-01"
+authenticator = IAMAuthenticator(f"{apikey}")
+language_translator = LanguageTranslatorV3(
+    version=f'{version}',
+    authenticator=authenticator
+)
 
-# language_translator.set_service_url('https://api.us-south.language-translator.watson.cloud.ibm.com')
-# languages = language_translator.list_languages().get_result()
-# #print(json.dumps(languages, indent=2))
+language_translator.set_service_url('https://api.us-south.language-translator.watson.cloud.ibm.com')
+languages = language_translator.list_languages().get_result()
+#print(json.dumps(languages, indent=2))
 
-
-# translation = language_translator.translate(
-#     text='I am',
-#     model_id='en-ja').get_result()
+try:
+    translation = language_translator.translate(
+        text='hola bonjour good',
+        target='en').get_result()
+    print(translation)
+except:
+    print("Are you sure that's a human language?")
 # kks = pykakasi.kakasi()
 # t = kks.convert(translation["translations"][0]["translation"])
 # # print(json.dumps(translation, indent=2))
 # for item in t:
 #             print(item['hepburn'])
-### IBM TRANSLATE TEST ENDS
+## IBM TRANSLATE TEST ENDS
 
 
 ### TEST NLTK
