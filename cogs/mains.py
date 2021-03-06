@@ -7,7 +7,7 @@ class mains(commands.Cog):
 
     def __init__(self,bot):
         self.bot = bot
-        self.games = ["You","Porn"," ","Your mom","you sleep","Valortne"]
+        self.games = ["You"," ","Your mom","you sleep","Valortne"]
         self.checks1 = ["it's all", "its always","always has","has been","it's always","its all","its there","it's there","it's been there","its been there","it been there","its been","it's been", "wait,","wait it's", "was it like","have you been","has it been","have it been"]
         self.checks2 = []
         self.me = 455948790239723530
